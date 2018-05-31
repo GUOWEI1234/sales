@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="mysql@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.0">
+    <root id="1"/>
+    <schema id="2" parent="1" name="medical_instruments">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="mysql"/>
+    <schema id="5" parent="1" name="performance_schema"/>
+    <schema id="6" parent="1" name="test"/>
+    <schema id="7" parent="1" name="topic_selection_system"/>
+    <table id="8" parent="2" name="admin">
+      <Comment>admin</Comment>
+    </table>
+    <table id="9" parent="2" name="admin_operation">
+      <Comment>管理员操作记录</Comment>
+    </table>
+    <table id="10" parent="2" name="buy">
+      <Comment>购买记录</Comment>
+    </table>
+    <table id="11" parent="2" name="class">
+      <Comment>产品类型</Comment>
+    </table>
+    <table id="12" parent="2" name="evaluate">
+      <Comment>评论</Comment>
+    </table>
+    <table id="13" parent="2" name="pro_class">
+      <Comment>产品类型相关信息</Comment>
+    </table>
+    <table id="14" parent="2" name="pro_img">
+      <Comment>产品图片</Comment>
+    </table>
+    <table id="15" parent="2" name="product">
+      <Comment>产品表</Comment>
+    </table>
+    <table id="16" parent="2" name="shopping_cart">
+      <Comment>购物车</Comment>
+    </table>
+    <table id="17" parent="2" name="user">
+      <Comment>用户表</Comment>
+    </table>
+    <column id="18" parent="8" name="admin_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="19" parent="8" name="admin_password">
+      <Position>2</Position>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="20" parent="8" name="admin_name">
+      <Position>3</Position>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="21" parent="8" name="admin_telphone">
+      <Position>4</Position>
+      <DataType>char(13)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="22" parent="8" name="PRIMARY">
+      <ColNames>admin_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="23" parent="9" name="admin_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="24" parent="9" name="product_id">
+      <Position>2</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="25" parent="9" name="operstion_time">
+      <Position>3</Position>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <column id="26" parent="9" name="operation">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <index id="27" parent="9" name="product_id">
+      <ColNames>product_id</ColNames>
+    </index>
+    <key id="28" parent="9" name="PRIMARY">
+      <ColNames>admin_id
+product_id
+operstion_time</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="29" parent="9" name="admin_operation_ibfk_1">
+      <ColNames>admin_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>admin</RefTableName>
+      <RefColNames>admin_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="30" parent="9" name="admin_operation_ibfk_2">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="31" parent="10" name="buy_price">
+      <Position>1</Position>
+      <DataType>decimal(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="32" parent="10" name="user_id">
+      <Position>2</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="33" parent="10" name="product_id">
+      <Position>3</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="34" parent="10" name="buy_count">
+      <Position>4</Position>
+      <DataType>char(2)|0</DataType>
+    </column>
+    <column id="35" parent="10" name="buy_time">
+      <Position>5</Position>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <index id="36" parent="10" name="product_id">
+      <ColNames>product_id</ColNames>
+    </index>
+    <key id="37" parent="10" name="PRIMARY">
+      <ColNames>user_id
+product_id
+buy_time</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="38" parent="10" name="buy_ibfk_1">
+      <ColNames>user_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>user_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="39" parent="10" name="buy_ibfk_2">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="40" parent="11" name="class_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="41" parent="11" name="class_name">
+      <Position>2</Position>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="42" parent="11" name="PRIMARY">
+      <ColNames>class_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="43" parent="12" name="user_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="44" parent="12" name="product_id">
+      <Position>2</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="45" parent="12" name="eva_time">
+      <Position>3</Position>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <column id="46" parent="12" name="evalate">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <index id="47" parent="12" name="product_id">
+      <ColNames>product_id</ColNames>
+    </index>
+    <key id="48" parent="12" name="PRIMARY">
+      <ColNames>user_id
+product_id
+eva_time</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="49" parent="12" name="evaluate_ibfk_1">
+      <ColNames>user_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>user_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="50" parent="12" name="evaluate_ibfk_2">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="51" parent="13" name="class_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="52" parent="13" name="product_id">
+      <Position>2</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <index id="53" parent="13" name="product_id">
+      <ColNames>product_id</ColNames>
+    </index>
+    <key id="54" parent="13" name="PRIMARY">
+      <ColNames>class_id
+product_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="55" parent="13" name="pro_class_ibfk_1">
+      <ColNames>class_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>class</RefTableName>
+      <RefColNames>class_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="56" parent="13" name="pro_class_ibfk_2">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="57" parent="14" name="product_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="58" parent="14" name="pro_img_url">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <key id="59" parent="14" name="PRIMARY">
+      <ColNames>product_id
+pro_img_url</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="60" parent="14" name="pro_img_ibfk_1">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="61" parent="15" name="product_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="62" parent="15" name="product_name">
+      <Position>2</Position>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="63" parent="15" name="product_price">
+      <Position>3</Position>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="64" parent="15" name="product_intr">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <column id="65" parent="15" name="product_count">
+      <Position>5</Position>
+      <DataType>int(10)|0</DataType>
+    </column>
+    <column id="66" parent="15" name="product_statu">
+      <Position>6</Position>
+      <DataType>char(4)|0</DataType>
+    </column>
+    <key id="67" parent="15" name="PRIMARY">
+      <ColNames>product_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="68" parent="16" name="user_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="69" parent="16" name="product_id">
+      <Position>2</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="70" parent="16" name="pro_name">
+      <Position>3</Position>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="71" parent="16" name="pro_price">
+      <Position>4</Position>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="72" parent="16" name="add_time">
+      <Position>5</Position>
+      <DataType>timestamp|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;0000-00-00 00:00:00&apos;</DefaultExpression>
+    </column>
+    <index id="73" parent="16" name="user_id">
+      <ColNames>user_id</ColNames>
+    </index>
+    <key id="74" parent="16" name="PRIMARY">
+      <ColNames>product_id
+user_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="75" parent="16" name="shopping_cart_ibfk_2">
+      <ColNames>user_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>user_id</RefColNames>
+    </foreign-key>
+    <foreign-key id="76" parent="16" name="shopping_cart_ibfk_1">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>medical_instruments</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>product_id</RefColNames>
+    </foreign-key>
+    <column id="77" parent="17" name="user_id">
+      <Position>1</Position>
+      <DataType>char(30)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="78" parent="17" name="user_password">
+      <Position>2</Position>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="79" parent="17" name="user_name">
+      <Position>3</Position>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="80" parent="17" name="user_telphone">
+      <Position>4</Position>
+      <DataType>char(13)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="81" parent="17" name="PRIMARY">
+      <ColNames>user_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

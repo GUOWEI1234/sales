@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.dao.Pro_ClassDao">
+
+    <insert id="insertProClass" parameterType="com.my.pojo.Pro_class">
+        insert into pro_class (class_id,product_id) VALUES (#{class_id},#{product_id})
+    </insert>
+
+</mapper>

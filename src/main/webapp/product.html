@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>销售</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<script src="js/jquery.min.js"></script>
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="css/form.css" rel="stylesheet" type="text/css" media="all" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<link rel="stylesheet" href="css/etalage.css">
+	<script src="js/jquery.etalage.min.js"></script>
+	<!--通过URL获取产品编号-->
+	<script type="text/javascript">
+        $(document).ready(function () {
+            jQuery.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null)
+                    return decodeURI(r[2]);
+                else
+                    return null;
+            }
+        });
+	</script>
+	<!--获取产品的属性-->
+	<script type="text/javascript">
+        $(document).ready(function () {
+            jQuery.getProduct = function () {
+                var result;
+                var product_id = $.getUrlParam('product_id');
+                if (product_id != null) {
+                    $.ajax({
+                        url: "product/getProductById",
+                        dataType: "json",
+                        data: {"product_id": product_id},
+                        async: false,
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        success: function (data) {
+                            result = data;
+                        }
+                    });
+                }
+                return result;
+            }
+		})
+	</script>
+	<script>
+        $(document).ready(function () {
+           $.ajax({
+               url:"shoppingCart/getShoppingCartByUserId",
+               dataType: "json",
+               data: {},
+               async: false,
+               contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+               success: function (data) {
+                   if(data != null){
+                       var product = $.getProduct();
+                       for(var i=0;i<data.length;i++){
+                           if(product.product_id == data[i].product_id){
+                               $(".shopping_cart").attr("disabled", true);
+                               $(".shopping_cart").css("background-color","#cccccc");
+                               $(".shopping_cart").text("已添加");
+                               return;
+						   }
+					   }
+				   }
+               }
+		   });
+		});
+	</script>
+	<!--写入页面产品的属性-->
+	<script type="text/javascript">
+        $(document).ready(function () {
+            var data = $.getProduct();
+            if(data != null){
+                var product = data;
+                var name = product.product_name;
+                var price = "现价：￥"+product.product_price+"/件";
+                var count = "库存："+product.product_count+"件";
+                var intr = product.product_intr;
+                var img = new Array();
+                for(var i=1;i<product.pro_img.length;i++){
+                    img[i-1] = "images/"+product.pro_img[i].pro_img_url;
+                }
+                $("#etalage").find('li').eq(0).find('img').eq(0).attr('src',img[0]);
+                $("#etalage").find('li').eq(0).find('img').eq(1).attr('src',img[0]);
+                $("#etalage").find('li').eq(1).find('img').eq(0).attr('src',img[1]);
+                $("#etalage").find('li').eq(1).find('img').eq(1).attr('src',img[1]);
+                $("#etalage").find('li').eq(2).find('img').eq(0).attr('src',img[2]);
+                $("#etalage").find('li').eq(2).find('img').eq(1).attr('src',img[2]);
+                $("#etalage").find('li').eq(3).find('img').eq(0).attr('src',img[3]);
+                $("#etalage").find('li').eq(3).find('img').eq(1).attr('src',img[3]);
+                $("#product_attr").find('h3').eq(0).text(name);//名字
+                $("#product_attr").find('p').eq(1).text(price);//价格
+                $("#product_attr").find('p').eq(2).text(count);//库存
+                $("#product_intr").find('h3').eq(0).text(intr);//说明
+            }
+        });
+	</script>
+	<script type="text/javascript">
+        $(document).ready(function () {
+            var product_id = $.getUrlParam('product_id');
+            if(product_id != null){
+                $.ajax({
+                    url:"evaluate/getEval",
+                    dataType:"json",
+                    data:{"product_id":product_id},
+                    async:false,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    success:function (data) {
+                        if((data.eva != null) && (data.dataList != "")){
+                            $("#pro_evaluate").empty();
+                            var  evaluate = data;
+                            var con = "";
+                            for(var i=0;i<evaluate.eva.length;i++){
+                                con += "<div class='media-body'><p class='media-heading'>"+evaluate.dataList[i]+"</p><h4>&nbsp;&nbsp;"+evaluate.eva[i].evalate+"</h4><hr/></div>"
+							}
+                            $("#pro_evaluate").append(con);
+                        }else{
+                            //没有评论
+                            $("#pro_evaluate").empty();
+                            $("#pro_evaluate").append("<h3>暂时还没有评论哟123!!!</h3>");
+						}
+                    },
+                    error: function () {
+                        //没有评论
+                        $("#pro_evaluate").empty();
+                        $("#pro_evaluate").append("<h3>暂时还没有评论哟!!!</h3>");
+                    }
+                })
+            }
+        });
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			$("#add").click(function () {
+                var t = $(this).parent().find('input[class*=number]');
+                t.val(parseInt(t.val())+1);
+            })
+			$("#min").click(function () {
+                var t = $(this).parent().find('input[class*=number]');
+                if(parseInt(t.val()) > 0){
+                    t.val(parseInt(t.val())-1);
+				}
+            })
+        })
+	</script>
+	<script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url:"user/getUserSession",
+                dataType:"json",
+                data:{},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (data) {
+                    if(data != null){
+                        var user = data.user_name;
+                        $("#login_name").empty();
+                        $("#login_name").append("<a class='text-primary' href='user.html'>"+user+"</a>");
+                    }else{
+                        $(".buyNow").attr("disabled", true);
+                        $(".buyNow").css("background-color","#cccccc");
+                        $(".buyNow").text("请先登录");
+                        $(".shopping_cart").attr("disabled", true);
+                        $(".shopping_cart").css("background-color","#cccccc");
+                        $(".shopping_cart").text("请先登录");
+                        $(".btn-success").attr("disabled", true);
+                        $(".btn-success").css("background-color","#cccccc");
+                    }
+                },
+                error: function () {
+                }
+            })
+        });
+	</script>
+	<script>
+		jQuery(document).ready(function ($) {
+			$('#etalage').etalage({
+				thumb_image_width: 300,
+				thumb_image_height: 400,
+				source_image_width: 800,
+				source_image_height: 1000,
+				show_hint: true,
+			});
+		});
+	</script>
+	<script src="js/jquery.easydropdown.js"></script>
+	<script src="js/responsiveslides.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script>
+		$(function () {
+			$("#slider").responsiveSlides({
+				auto: true,
+				nav: true,
+				speed: 500,
+				namespace: "callbacks",
+				pager: true,
+			});
+		});
+	</script>
+	<script type="text/javascript">
+		function submitEval() {
+            var product_id = $.getUrlParam('product_id');
+		    var eval = $(".form-control").val();
+		    if(eval == "" || product_id == ""){
+		        alert("请输入评论内容！");
+		        return false;
+			}else{
+		        $.ajax({
+		            url:'evaluate/insertEval',
+                    dataType:"json",
+                    data:{'product_id':product_id,'evalate':eval},
+                    async:false,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    success: function (data) {
+                        alert("评论成功!!!!");
+                        window.location.href = "./product.html?product_id="+product_id;
+                        window.event.returnValue=false;
+					},
+					error:function () {
+						alert("评论失败！！");
+                    }
+
+				})
+			}
+        }
+	</script>
+	<script type="text/javascript">
+		function buyProduct() {
+			var pro = $.getProduct();
+			var count = $(".number").val();
+			if(count <= 0){
+			    alert("请选择购买件数!!!");
+			    return false;
+			}
+			if(count > pro.product_count){
+			    alert("最多购买"+pro.product_count+"/件产品!!!");
+			    return false;
+			}
+			$.ajax({
+			    url:"buy/insertBuy",
+                dataType:"json",
+                data:{"buy_price":pro.product_price,"product_id":pro.product_id, "buy_count":count},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success:function (data) {
+                    window.location.href = "./buy.html";
+                    window.event.returnValue=false;
+                },
+				error:function () {
+					alert("购买失败!!!");
+                }
+			});
+        };
+		function shoppingCart() {
+            var pro = $.getProduct();
+            $.ajax({
+				url:"shoppingCart/insert",
+                dataType:"json",
+                data:{"product_id":pro.product_id,"pro_name":pro.product_name,"pro_price":pro.product_price},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success:function () {
+					alert("添加成功");
+                    $(".shopping_cart").attr("disabled", true);
+                    $(".shopping_cart").css("background-color","#cccccc");
+                    $(".shopping_cart").text("已添加");
+                },
+				error:function () {
+					alert("添加购物车失败!!!");
+                }
+			});
+        }
+	</script>
+
+</head>
+
+<body>
+	<div class="header">
+		<div class="top-header">
+			<div class="container">
+				<div class="header-left">
+					<p>
+						<font size="4">成都医疗仪器销售公司</font>
+					</p>
+				</div>
+				<div class="login-section" id="login_name">
+					<ul>
+						<li>
+							<a href="login.html">登录</a>
+						</li> |
+						<li>
+							<a href="register.html">注册</a>
+						</li>
+					</ul>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="bottom-header">
+			<div class="container">
+				<div class="logo">
+					<a href="index.html">
+						<h1>祝你早日康复</h1>
+					</a>
+				</div>
+				<div class="header_bottom_right">
+					<!-- start h_menu4 -->
+					<div class="h_menu4">
+						<!--<a class="toggleMenu" href="">Menu</a>-->
+						<ul class="nav">
+							<li class="active">
+								<a href="index.html">首页</a>
+							</li>
+							<li>
+								<a href="products.html" class="root">产品类型</a>
+								<ul>
+									<li><a href="productClass.html?class_name=轮椅">轮椅</a></li>
+									<li><a href="productClass.html?class_name=助听器">助听器</a></li>
+									<li><a href="productClass.html?class_name=便器椅">便器椅</a></li>
+									<li><a href="productClass.html?class_name=配件">配件</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="company.html">公司</a>
+							</li>
+							<li>
+								<a href="news.html">新闻</a>
+							</li>
+							<li>
+								<a href="contact.html">联系我们</a>
+							</li>
+						</ul>
+						<script type="text/javascript" src="js/nav.js"></script>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="dreamcrub">
+		<div class="container">
+			<ul class="breadcrumbs">
+
+				<li class="home">
+					<a href="index.html" title="销售产品">
+						<img src="images/home.png" alt="" />
+					</a>&nbsp;
+					<span>&gt;</span>
+				</li>
+				<li>
+					销售
+				</li>&nbsp;
+				<span>&gt;</span>
+				<li>产品</li>
+			</ul>
+			<ul class="previous">
+				<li>
+					<a href="index.html">返回首页</a>
+				</li>
+			</ul>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<div class="women_main">
+		<div class="container">
+			<div class="row single">
+				<div class="col-md-9 span-single">
+					<div class="single_left">
+						<div class="grid images_3_of_2">
+							<ul id="etalage">
+								<li>
+									<img class="etalage_thumb_image" src="images/zhtq_1.jpg" class="img-responsive" />
+									<img class="etalage_source_image" src="images/zhtq_1.jpg" class="img-responsive" title="" />
+								</li>
+								<li>
+									<img class="etalage_thumb_image" src="images/zhtq_1.jpg" class="img-responsive" />
+									<img class="etalage_source_image" src="images/zhtq_1.jpg" class="img-responsive" title="" />
+								</li>
+								<li>
+									<img class="etalage_thumb_image" src="images/zhtq_1.jpg" class="img-responsive" />
+									<img class="etalage_source_image" src="images/zhtq_1.jpg" class="img-responsive" />
+								</li>
+								<li>
+									<img class="etalage_thumb_image" src="images/zhtq_1.jpg" class="img-responsive" />
+									<img class="etalage_source_image" src="images/zhtq_1.jpg" class="img-responsive" />
+								</li>
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="desc1 span_3_of_2" id="product_attr">
+							<h3>产品名字。。。。</h3>
+							<p>原价： ￥999/件</p>
+							<div class="det_nav">
+								<h4>其他商品推荐 :</h4>
+								<ul>
+									<li>
+										<a href="#">
+											<img src="images/gzh_1.jpg" class="img-responsive" alt="" />
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="images/gzh_1.jpg" class="img-responsive" alt="" />
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="images/gzh_1.jpg" class="img-responsive" alt="" />
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="images/gzh_1.jpg" class="img-responsive" alt="" />
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="btn_form">
+								<p>现价： ￥1999/件 </p>
+								<p>库存：  9件 </p>
+								<img id="min" src="images/p_minus.png" class="" alt="" width="20" height="20" />
+								<input type="button" class="number" value="1"/>
+								<img id="add" src="images/p_plus.png" class="" alt="" width="20" height="20" />
+								<div class="clearfix">
+									<br>
+								</div>
+								<button class="shopping_cart btn btn-lg btn-warning" onclick="shoppingCart()">加入购物车</button>
+								<button class="buyNow btn btn-lg btn-warning" onclick="buyProduct()">立即购买</button>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="single-bottom1" id="product_intr">
+						<h6>产品说明</h6>
+						<h3 class="prod-desc">啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</h3>
+					</div>
+					<div>
+						<h3>评论</h3>
+						<div class="yellowLine"></div>
+						<ul class="media-list">
+							<li class="media" id="pro_evaluate">
+								<div class="media-body">
+									<p class="media-heading">某某某-时间</p>
+									<h4>&nbsp;&nbsp;啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</h4>
+									<hr/>
+								</div>
+								<div class="media-body">
+									<p class="media-heading">某某某-时间</p>
+									<h4>&nbsp;&nbsp;啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</h4>
+									<hr/>
+								</div>
+								<div class="media-body">
+									<p class="media-heading">某某某-时间</p>
+									<h4>&nbsp;&nbsp;啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</h4>
+									<hr/>
+								</div>
+							</li>
+						</ul>
+						<form>
+							<div class="form-group">
+								<h3 class="evalute"><br>留下你的足迹</h3>
+								<textarea placeholder="请输入评论内容：" rows="3" class="form-control"></textarea>
+							</div>
+							<button class="btn btn-success" onclick="submitEval()">发表</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="container">
+			<h1 class="nav">成都医疗仪器销售公司感谢您的支持!</h1>
+			<h3>公司地址：
+				<br>四川省成都市双流区航空港常乐小区！</h3>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.dao.productDao">
+
+    <select id="getAllProduct" resultType="com.my.pojo.Product">
+        SELECT * from product limit #{currPage},5;
+    </select>
+
+    <update id="updateCount" parameterType="com.my.pojo.Product">
+        UPDATE product
+        SET product.product_count = #{product_count}
+        WHERE product.product_id = #{product_id};
+    </update>
+
+    <update id="update" parameterType="com.my.pojo.Product">
+        UPDATE product
+        SET product.product_name = #{product_name},
+        product.product_intr = #{product_intr},
+        product.product_count = #{product_count},
+        product.product_price = #{product_price},
+        product.product_statu = #{product_statu}
+        WHERE product.product_id = #{product_id};
+    </update>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) from product where 1=1
+    </select>
+
+    <insert id="insertProduct" parameterType="com.my.pojo.Product">
+        insert into product (product_id,product_name,product_intr,product_count,product_price,product_statu)
+         VALUES (#{product_id},#{product_name},#{product_intr},#{product_count},#{product_price},#{product_statu})
+    </insert>
+
+    <select id="getProductByName" parameterType="String" resultType="com.my.pojo.Product">
+        SELECT * from product where product_name=#{product_name}
+    </select>
+
+    <!--首页新品显示-->
+    <resultMap id="ImgResult" type="com.my.pojo.Pro_img">
+        <id property="product_id" column="product_id"/>
+        <id property="pro_img_url" column="pro_img_url"/>
+    </resultMap>
+
+    <resultMap id="ClassResult" type="com.my.pojo.Class">
+        <id property="class_id" column="class_id"/>
+        <result property="class_name" column="class_name"/>
+    </resultMap>
+
+    <resultMap id="ClassProductResult" type="com.my.pojo.Product">
+        <id property="product_id" column="product_id"/>
+        <result property="product_name" column="product_name"/>
+        <result property="product_price" column="product_price"/>
+        <result property="product_intr" column="product_intr"/>
+        <result property="product_count" column="product_count"/>
+        <result property="product_statu" column="product_statu"/>
+        <association property="aClass" resultMap="ClassResult"/>
+        <collection property="pro_img" resultMap="ImgResult"/>
+    </resultMap>
+
+    <resultMap id="ImgProductResult" type="com.my.pojo.Product">
+        <id property="product_id" column="product_id"/>
+        <result property="product_name" column="product_name"/>
+        <result property="product_price" column="product_price"/>
+        <result property="product_intr" column="product_intr"/>
+        <result property="product_count" column="product_count"/>
+        <result property="product_statu" column="product_statu"/>
+        <collection property="pro_img" resultMap="ImgResult"/>
+    </resultMap>
+
+    <select id="getNewProduct" resultMap="ImgProductResult">
+        SELECT
+            pro_img.*, product.*
+        FROM
+            pro_img,
+            product
+        WHERE
+            pro_img.product_id = product.product_id
+        AND product.product_statu = '3'
+        LIMIT 15
+    </select>
+
+    <select id="getHotProduct" resultMap="ImgProductResult">
+        select pro_img.*, product.*
+        FROM
+            pro_img,
+            product
+        WHERE
+            pro_img.product_id = product.product_id
+        AND product.product_statu = '2'
+LIMIT 30
+    </select>
+
+    <select id="getProductById" parameterType="String" resultMap="ImgProductResult">
+        SELECT
+            pro_img.*, product.*
+        FROM
+            pro_img,
+            product
+        WHERE
+            pro_img.product_id = product.product_id
+        AND product.product_id = #{product_id}
+    </select>
+
+    <select id="getProByClass" parameterType="String" resultMap="ClassProductResult">
+        SELECT
+            class.*, product.*, pro_img.*
+        FROM
+            class,
+            product,
+            pro_class,
+            pro_img
+        WHERE
+            class.class_id = pro_class.class_id
+        AND product.product_id = pro_class.product_id
+        AND product.product_id = pro_img.product_id
+        AND product.product_statu > '0'
+        AND class.class_id = (
+            SELECT
+                class_id
+            FROM
+                class
+            WHERE
+                class.class_name = #{class_name}
+        )
+    </select>
+
+</mapper>

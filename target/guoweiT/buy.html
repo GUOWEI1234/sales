@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>支付</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+</head>
+<body>
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.qrcode.js"></script>
+<script type="text/javascript" src="js/qrcode.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <a href="index.html"><button type="button" class="btn btn-lg btn-block">返回首页</button></a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <h3>支付宝支付</h3>
+            <div id="qrcodeTable"></div>
+        </div>
+        <div class="col-md-6 column">
+            <h3>微信支付</h3>
+            <div id="qrcodeCanvas"></div>
+        </div>
+    </div>
+</div>
+<script>
+    jQuery('#qrcodeTable').qrcode({
+        render	: "table",
+        text	: "http://www.baidu.com"
+    });
+    jQuery('#qrcodeCanvas').qrcode({
+        text	: "http://www.cuit.edu.cn/"
+    });
+</script>
+
+</body>
+</html>

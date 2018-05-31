@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery.min.js"></script>
+	<!-- Custom Theme files -->
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+	<!-- Custom Theme files -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!--webfont-->
+	<script src="js/jquery.easydropdown.js"></script>
+	<script src="js/responsiveslides.min.js"></script>
+	<script>
+		$(function () {
+		  $("#slider").responsiveSlides({
+			auto: true,
+			nav: true,
+			speed: 500,
+			namespace: "callbacks",
+			pager: true,
+		  });
+		});
+	</script>
+	<script>
+		function register(myform) {
+		    if(myform.username.value == ""){
+                alert("姓名不能为空！");
+                myform.username.focus();
+                return false;
+			}
+            if(myform.telphone.value == ""){
+                alert("电话不能为空！");
+                myform.telphone.focus();
+                return false;
+            }
+			if(myform.password.value != myform.password2.value){
+			    alert("密码不一致，请重新输入！");
+                myform.password.focus();
+                myform.password2.focus();
+			    return false;
+			}
+            var telphone = myform.telphone.value;
+            var password = myform.password.value;
+            var username = myform.username.value;
+            var param="user/register"
+            $.ajax({
+                url:param,
+                type:"post",
+                dataType:"json",
+                data:{"username":username,"telphone":telphone,"password":password},
+                async:false,//同步
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',//防止乱码
+                success:function(data){
+                    alert("恭喜你注册成功"+data.user_name);
+                    window.location.href = "./index.html?user_name="+data.user_name+'&user_telphone='+data.user_telphone;
+                    window.event.returnValue=false;
+                },
+                error:function () {
+                    alert("注册失败，你的电话号码已被占用，请找回密码。");
+                }
+			})
+
+        }
+	</script>
+
+</head>
+<body>
+    <!-- header-section-starts -->
+	<div class="header">
+		<div class="top-header">
+			<div class="container">
+				<div class="header-left">
+					<p><font size="4">成都医疗仪器销售公司</font></p>
+				</div>
+				<div class="login-section">
+					<ul>
+						<li><a href="login.html">登录</a>  </li> |
+						<li><a href="register.html">注册</a> </li>
+					</ul>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="bottom-header">
+			<div class="container">
+				<div class="logo">
+					<a href="index.html"><h1>祝你早日康复</h1></a>
+				</div>
+				<div class="header_bottom_right">
+					<div class="h_menu4">
+					<ul class="nav">
+						<li class="active"><a href="index.html">首页</a></li>
+						<li><a href="products.html" class="root">产品类型</a>
+							<ul>
+								<li><a href="productClass.html?class_name=轮椅">轮椅</a></li>
+								<li><a href="productClass.html?class_name=助听器">助听器</a></li>
+								<li><a href="productClass.html?class_name=便器椅">便器椅</a></li>
+								<li><a href="productClass.html?class_name=配件">配件</a></li>
+							</ul>
+						</li>
+						<li><a href="bikes.html">公司</a>							
+						</li>
+						<li><a href="products.html">新闻</a>							
+						</li>
+							<li><a href="contact.html">联系我们</a></li>
+						</ul>
+						<script type="text/javascript" src="js/nav.js"></script>
+				</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- header-section-ends -->
+	<!-- content-section-starts -->
+	<div class="content">
+	<div class="dreamcrub">
+		<div class="container">
+			   	 <ul class="breadcrumbs">
+                    <li class="home">
+                       <a href="index.html" title="Go to Home Page"><img src="images/home.png" alt=""/></a>&nbsp;
+                       <span>&gt;</span>
+                    </li>
+                    <li>
+                       注册
+                    </li>
+                </ul>
+                <ul class="previous">
+                	<li><a href="index.html">返回首页</a></li>
+                </ul>
+                <div class="clearfix"></div>
+			   </div>
+			   </div>
+	<div class="container">
+		<div class="main-register-form">
+		  <div class="register">
+		  	  <form id="myform" class="myform" name="myform" method="post">
+				 <div class="register-top-grid">
+					<h3>填写个人信息</h3>
+					 <div class="wow fadeInLeft" data-wow-delay="0.4s">
+						<span>姓&nbsp;&nbsp;&nbsp;&nbsp;名<label>*</label></span>
+						<input type="text" id="username" name="username">
+					 </div>
+					 <div class="wow fadeInRight" data-wow-delay="0.4s">
+						 <span>电话号码<label>*</label></span>
+						 <input type="text" id="telphone" name="telphone">
+					 </div>
+					 <div class="register-bottom-grid">
+						 <div class="wow fadeInLeft" data-wow-delay="0.4s">
+							 <span>密&nbsp;&nbsp;&nbsp;&nbsp;码<label>*</label></span>
+							 <input type="text" id="password" name="password">
+						 </div>
+						 <div class="wow fadeInRight" data-wow-delay="0.4s">
+							 <span>确认密码<label>*</label></span>
+							 <input type="text" id="password2" name="password2">
+						 </div>
+						 <input type="submit" value="提交注册" onclick="register(this.form)">
+					 </div>
+				 </div>
+			  </form>
+
+		   </div>
+	    </div>
+	</div>
+</div>
+	<!-- content-section-ends -->
+	<!-- footer-section-starts -->
+	<div class="footer"> 
+		<div class="container">
+			<h1 class="nav">成都医疗仪器销售公司感谢您的支持!</h1>	
+			<h3>公司地址：<br>四川省成都市双流区航空港常乐小区！</h3>
+		</div>
+	</div>
+	<!-- footer-section-ends -->
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加新品</title>
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="css/selectFilter.css" rel='stylesheet' type='text/css' />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/selectFilter.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <a href="./admin.html"><button type="button" class="btn btn-lg btn-block">返回上一页</button></a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="alert alert-dismissable alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h3>
+                    注意!!!
+                </h3>
+                <div>
+                    <strong>请认真核实并填写添加的新品以及属性!!!</strong>
+                </div>
+            </div>
+            <form class="form-horizontal" role="form" id="productForm">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label text-left">产品名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="product_name" name="product_name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">产品价格</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="product_price" name="product_price" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">产品介绍</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="product_intr" name="product_intr"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">产品数量</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="product_count" name="product_count"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">产品状态</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="product_statu" name="product_statu" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">类型提示</label>
+                    <div class="col-sm-10">
+                        <h4>1:轮椅,2:助听器,3:便器椅,4:配件</h4>
+                    </div>
+                </div>
+                <!--checkbox-->
+                <div class="item">
+                    <div class="filter-box form-group">
+                        <label class="col-sm-2 control-label">产品类型</label>
+                        <div class="filter-text col-sm-10">
+                            <input id="productClass" name="productClass" class="filter-title" type="text" readonly placeholder="请选择产品类型" />
+                            <i class="icon icon-filter-arrow"></i>
+                        </div>
+                        <select name="filter">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+                <!--提交-->
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button id="submitPro" type="submit" class="btn btn-default" onclick="addProduct()">提交</button>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.filter-box').selectFilter({
+        callBack : function (val){
+        }
+    });
+</script>
+<script type="text/javascript">
+    function addProduct() {
+        $.ajax({
+            url:"product/insertProduct",
+            type:"post",
+            dataType:"json",
+            data:$("#productForm").serialize(),
+            async:false,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',//防止乱码
+            success:function(data){
+                var product_name = data.product_name;
+                if(product_name != null){
+                    window.location.href = "./addNewPic.html?product_name="+product_name;
+                    window.event.returnValue=false;
+                }
+            },
+            error:function () {
+                alert("数据插入失败！！！！");
+            }
+        })
+    }
+</script>
+</body>
+</html>

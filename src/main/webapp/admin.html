@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员管理</title>
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <script src="js/jquery.min.js"></script>
+    <script>
+        function submitProduct(trline) {
+            //var aa = $("#adminManage").find('tr').eq(trline).find('td').eq(trline).text();
+            //var bb = $("#adminManage").find('tr').eq(trline).find('td').size();
+            var product_id = $("#adminManage").find('tr').eq(trline).find('td').eq(0).text();
+            var product_name = $("#adminManage").find('tr').eq(trline).find('td').eq(1).text();
+            var product_intr = $("#adminManage").find('tr').eq(trline).find('td').eq(2).text();
+            var product_count = $("#adminManage").find('tr').eq(trline).find('td').eq(3).text();
+            var product_price = $("#adminManage").find('tr').eq(trline).find('td').eq(4).text();
+            var product_statu = $("#adminManage").find('tr').eq(trline).find('td').eq(5).text();
+            $.ajax({
+                url:"product/UpdateProduct",
+                dataType:"json",
+                data:{"product_id":product_id,"product_name":product_name,
+                    "product_price":product_price,"product_intr":product_intr,
+                    "product_count":product_count,"product_statu":product_statu},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success:function (data) {
+                    alert("修改成功!!!!");
+                    window.location.href = "./admin.html";
+                    window.event.returnValue=false;
+                },
+                error:function () {
+                    alert("修改失败!!!!");
+                }
+            })
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url:"page/getTotalPage",
+                dataType:"json",
+                data:{},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success:function (data) {
+                    if(data != null){
+                        $("#totalPage").empty();
+                        $("#totalPage").html(data);
+                    }
+                },
+                error:function () {
+                }
+            });
+        });
+    </script>
+    <script>
+        function searchpage(currPage) {
+            $.ajax({
+                url:"product/getAllProduct",
+                dataType:"json",
+                data:{"currPage":currPage},
+                async:false,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (data) {
+                    if(data != null){
+                        var list = data;
+                        var con = "";
+                        for(var i=0;i<list.length;i++){
+                            var  value = parseInt(i);
+                            con += "<tr>";
+                            con += "<td>"+list[i].product_id+"</td>";
+                            con += "<td>"+list[i].product_name+"</td>";
+                            con += "<td>"+list[i].product_intr+"</td>";
+                            con += "<td>"+list[i].product_count+"</td>";
+                            con += "<td>"+list[i].product_price+"</td>";
+                            con += "<td>"+list[i].product_statu+"</td>";
+                            con += "<td><input type='button' value='编辑'></td>";
+                            con += "<td onclick='submitProduct("+i+")'>提交修改</td>";
+                            con += "</tr>";
+                        }
+                        $("#adminManage").empty();
+                        $("#adminManage").append(con);
+                    }else{
+                        alert("数据库加载失败");
+                        return false;
+                    }
+                },
+                error: function () {
+                    alert("获取数据失败！！！");
+                    return false;
+                }
+            })
+        }
+    </script>
+    <script type="text/javascript">
+        function addNew() {
+            window.location.href = "./addNewProduct.html";
+            window.event.returnValue=false;
+        }
+        function customerService() {
+            window.location.href = "./customer_service.html";
+            window.event.returnValue=false;
+        }
+        function firstPage() {
+            var currPage = 1;
+            searchpage(currPage);
+            $("#currPage").html(currPage);
+        }
+        function prePage() {
+            var currPage = parseInt($("#currPage").text());
+            if(currPage == null || currPage == 1){
+                alert("已经是第一页了!!!");
+                return false;
+            }
+            searchpage(currPage-1);
+            $("#currPage").html(currPage-1);
+        }
+        function nextPage() {
+            var currPage = parseInt($("#currPage").text());
+            var totalPage = parseInt($("#totalPage").text());
+            if(currPage == totalPage){
+                alert("已经是最后一页了!!!");
+                return false;
+            }
+            searchpage(currPage+1);
+            $("#currPage").html(currPage+1);
+        }
+        function lastPage() {
+            var totalPage = parseInt($("#totalPage").text());
+            searchpage(totalPage);
+            $("#currPage").html(totalPage);
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            var currPage = 1;
+            searchpage(currPage);
+        });
+    </script>
+    <!--table编辑功能-->
+    <script type="text/javascript">
+        $(function () {
+            $("#adminManage").on("click","input:button",function(){
+                str = $(this).val()=="编辑"?"确定":"编辑";
+
+                $(this).val(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+
+                $(this).parent().siblings("td").each(function(i) {  // 获取当前行的其他单元格
+
+                    if(i != 0){
+                        obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+
+                        if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+
+                            $(this).html("<input type='text' value='"+$(this).text()+"'>");
+
+                        else   // 如果已经存在文本框，则将其显示为文本框修改的值
+
+                            $(this).html(obj_text.val());
+                    }
+
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="alert alert-dismissable alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4>
+                    注意!
+                </h4>
+                <div>
+                    <strong>你接下来的操作将直接写入数据库！</strong>
+                </div>
+            </div>
+            <table class="table table-hover" id="proTable" name="proTable">
+                <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        产品名称
+                    </th>
+                    <th>
+                        产品介绍
+                    </th>
+                    <th>
+                        产品数量
+                    </th>
+                    <th>
+                        产品价格
+                    </th>
+                    <th>
+                        产品状态
+                    </th>
+
+                    <th>
+                        编辑
+                    </th>
+                    <th>
+                        提交编辑
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="success" name="adminManage" id="adminManage">
+                </tbody>
+            </table>
+            <ul class="pagination">
+                <li>
+                    <a onclick="firstPage()">首页</a>
+                </li>
+                <li>
+                    <a onclick="prePage()">上一页</a>
+                </li>
+                <li>
+                    <a>第<span id="currPage">1</span>页</a>
+                </li>
+                <li>
+                    <a>共<span id="totalPage">0</span>页</a>
+                </li>
+                <li>
+                    <a onclick="nextPage()">下一页</a>
+                </li>
+                <li>
+                    <a onclick="lastPage()">尾页</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <button type="button" class="btn btn-lg btn-warning" onclick="addNew()">新增产品</button>
+                    <button type="button" class="btn btn-lg btn-warning" onclick="customerService()">回复咨询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

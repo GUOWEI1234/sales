@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Custom Theme files -->
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!--webfont-->
+    <script src="js/jquery.easydropdown.js"></script>
+    <script src="js/responsiveslides.min.js"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                nav: true,
+                speed: 500,
+                namespace: "callbacks",
+                pager: true,
+            });
+        });
+    </script>
+    <!--登录的ajax-->
+    <script>
+        function admin_login(myform) {
+            if(myform.admin_id.value == ""){
+                alert("请输入工作号！");
+                myform.admin_id.focus();
+                return false;
+            }
+            if(myform.password.value == ""){
+                alert("请输入密码！");
+                myform.password.focus();
+                return false;
+            }
+            var admin_id = myform.admin_id.value;
+            var password = myform.password.value;
+            var param="admin/admin_login"
+            $.ajax({
+                url:param,
+                type:"get",
+                dataType:"json",
+                data:{"admin_id":admin_id,"password":password},
+                async:false,//同步
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',//防止乱码
+                success:function(data){
+                    window.location.href = "./admin.html";
+                    window.event.returnValue=false;
+                },
+                error:function () {
+                    alert("获取数据错误！");
+                }
+            });
+        }
+    </script>
+
+
+</head>
+<body>
+<div class="content">
+
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <button type="button" class="btn btn-sm btn-warning btn-block">管理员登录</button>
+            </div>
+        </div>
+    </div>
+    <div class="login-page">
+        <div class="dreamcrub">
+            <div class="container">
+                <ul class="breadcrumbs">
+                    <li class="home">
+                        <a href="index.html" title="Go to Home Page"><img src="images/home.png" alt=""/></a>&nbsp;
+                        <span>&gt;</span>
+                    </li>
+                    <li class="">
+                        登录
+                    </li>
+                </ul>
+                <ul class="previous">
+                    <li><a href="admin_login.html">管理员登录</a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="account_grid">
+                <div class="col-md-6 login-right wow fadeInRight" data-wow-delay="0.4s">
+                    <form id="myform" class="myform" method="post">
+                        <div>
+                            <span>工号<label>*</label></span>
+                            <input type="text" id="admin_id" name="admin_id">
+                        </div>
+                        <div>
+                            <span>密&nbsp;&nbsp;&nbsp;&nbsp;码<label>*</label></span>
+                            <input type="password" id="password" name="password">
+                        </div>
+                        <a class="forgot" href="#">申请重置密码</a>
+                        <input type="submit" value="登录" onClick="admin_login(this.form)">
+                    </form>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
